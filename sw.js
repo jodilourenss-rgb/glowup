@@ -1,13 +1,15 @@
 /* Caches the app so it opens with no connection.
    Bump CACHE when you change index.html, or the old copy keeps being served. */
-const CACHE = "glowup-v1";
+const CACHE = "glowup-v2";
 const ASSETS = [
   "./",
   "./index.html",
   "./manifest.json",
   "./apple-touch-icon.png",
   "./icon-192.png",
-  "./icon-512.png"
+  "./icon-512.png",
+  "./hero-today.jpg",
+  "./hero-beauty.jpg"
 ];
 
 self.addEventListener("install", e => {
