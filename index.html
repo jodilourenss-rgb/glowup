@@ -3,6 +3,9 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="Glow-Up">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="icon" href="icon-192.png">
 <title>Summer 2026 Glow-Up</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -139,6 +142,15 @@ button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:poin
   font-family:var(--serif);font-size:20px;line-height:1.5;font-weight:300}
 
 /* ---------- nav ---------- */
+.swaps{display:flex;flex-wrap:wrap;gap:8px;margin-top:4px}
+.swap{padding:9px 14px;border:1px solid var(--line-strong);border-radius:20px;background:var(--paper);
+  font-size:12px;color:var(--t2);transition:.15s}
+.swap.on{background:var(--ink);border-color:var(--ink);color:var(--inv)}
+.swap-clear{width:100%;margin-top:4px;padding:9px;font-size:11.5px;color:var(--clay);text-align:left}
+.btn-line{width:100%;padding:14px;border:1px solid var(--line-strong);border-radius:var(--r);
+  background:var(--paper);font-size:12px;letter-spacing:.06em;color:var(--t1);transition:.15s}
+.btn-line+.btn-line{margin-top:10px}
+.btn-line:active{background:var(--ivory)}
 nav{position:fixed;left:0;right:0;bottom:0;z-index:30;max-width:520px;margin:0 auto;
   background:rgba(253,251,248,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);
   display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom)}
@@ -282,6 +294,17 @@ nav svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.4;st
     <div class="mtabs" id="r-tabs" role="tablist"></div>
     <div id="r-body"></div>
     <div class="sec">
+      <h3 class="sec-h">Your data</h3>
+      <div class="card">
+        <p style="margin:0 0 16px;color:var(--t2);font-size:13.5px">
+          Everything you tick is stored on this device only. Save a backup now and then, especially before clearing your browser.</p>
+        <button class="btn-line" id="do-export">Save a backup file</button>
+        <button class="btn-line" id="do-import">Restore from a backup</button>
+        <input type="file" id="import-file" accept="application/json,.json" hidden>
+        <p style="margin:14px 0 0;color:var(--t3);font-size:11.5px" id="io-msg"></p>
+      </div>
+    </div>
+    <div class="sec">
       <div class="quote">The goal isn’t to look good for one day in December. It’s to build a routine that feels good all summer.</div>
     </div>
   </section>
@@ -312,9 +335,11 @@ const PLAN = [
    ex:["Lat pulldown — 3 × 8–12","Seated cable row — 3 × 8–12","Dumbbell shoulder press — 3 × 8–10",
        "Incline dumbbell press — 3 × 8–10","Lateral raises — 3 × 12–15","Cable tricep pushdowns — 2–3 × 10–12",
        "Hanging knee raises — 3 sets","Cable crunches — 3 × 12","Plank — 2 × 45–60 sec"]},
-  {k:"run", label:"Run", title:"Interval or steady run", when:"After work", goal:"Running + cardiovascular fitness",
-   ex:["Week A · 5 min warm-up","Week A · 6 × 2 min faster","Week A · 2 min easy between intervals","Week A · Cool down",
-       "Week B · 25–35 min steady","Week B · Slightly faster than Tuesday, not race pace"]},
+  {k:"run", label:"Run", title:"Interval run", when:"After work", goal:"Running + cardiovascular fitness",
+   alt:true,
+   exA:["5 min warm-up","6 × 2 min faster","2 min easy recovery between intervals","Cool down"],
+   exB:["25–35 minutes steady","Slightly faster than Tuesday","Not race pace"],
+   ex:[]},
   {k:"gym", label:"Gym", title:"Full body + glutes", when:"5:00 – 6:00 am", goal:"Full-body strength + shape",
    ex:["Squats or hack squats — 3 × 8–10","Hip thrust or glute bridge — 3 × 10","Walking lunges — 3 × 12 each leg",
        "Assisted pull-ups or lat pulldown — 3 × 8–10","Chest-supported row — 3 × 10",
@@ -355,13 +380,35 @@ const MONTHNAMES=["January","February","March","April","May","June","July","Augu
 
 /* ================= state ================= */
 const KEY = "glowup:v1";
-let S = { sessions:{}, ex:{}, habits:{}, notes:{}, teeth:{}, reset:{}, fields:{} };
+let S = { sessions:{}, ex:{}, habits:{}, notes:{}, teeth:{}, reset:{}, fields:{}, swap:{} };
 let curMonth = 0, resetMonth = 0, sheetDate = null, saveTimer = null;
 
 const iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
 const dow = d => (d.getDay()+6)%7;
 const today = new Date();
 const todayISO = iso(today);
+const parse = k => { const [y,m,d] = k.split("-").map(Number); return new Date(y,m-1,d); };
+
+/* Week A / Week B alternate from Monday 31 Aug 2026, the first week of the plan. */
+const ANCHOR = new Date(2026,7,31);
+function weekLetter(key){
+  const d = parse(key), mon = new Date(d); mon.setDate(d.getDate()-dow(d));
+  const wks = Math.floor((mon - ANCHOR) / 604800000);
+  return ((wks % 2) + 2) % 2 === 0 ? "A" : "B";
+}
+
+/* The session for a date: the scheduled one, unless it was swapped. */
+function planFor(key){
+  const idx = S.swap[key];
+  const base = PLAN[idx !== undefined ? idx : dow(parse(key))];
+  if(!base.alt) return base;
+  const L = weekLetter(key);
+  return Object.assign({}, base, {
+    ex: L === "A" ? base.exA : base.exB,
+    title: L === "A" ? "Interval run" : "Steady run",
+    week: L
+  });
+}
 
 /* Saves to the browser first. Falls back to Claude's own storage
    if this file is being previewed inside a chat, where localStorage is blocked. */
@@ -403,7 +450,7 @@ function monthOf(dateStr){ return MONTHS.findIndex(m => m.i === +dateStr.slice(5
 
 /* ================= today ================= */
 function renderToday(){
-  const d = today, w = dow(d), p = PLAN[w];
+  const d = today, w = dow(d), p = planFor(todayISO);
   const hour = d.getHours();
   document.getElementById("t-greet").textContent = hour<12 ? "Good morning" : hour<17 ? "Good afternoon" : "Good evening";
   const mi = monthOf(todayISO);
@@ -411,7 +458,8 @@ function renderToday(){
   document.getElementById("t-title").textContent = p.title;
   document.getElementById("t-date").textContent = DAYNAMES[w]+", "+d.getDate()+" "+MONTHNAMES[d.getMonth()];
   document.getElementById("t-tag").innerHTML = tagHTML(p);
-  document.getElementById("t-when").textContent = p.when;
+  document.getElementById("t-when").textContent =
+    p.when + (p.week ? "  ·  Week " + p.week : "") + (S.swap[todayISO]!==undefined ? "  ·  Swapped" : "");
   document.getElementById("t-goal").textContent = p.goal;
   document.getElementById("t-focus").textContent = mi>=0 ? MONTHS[mi].note : "—";
 
@@ -458,7 +506,7 @@ function renderMonth(){
   const g = document.getElementById("m-grid"); g.innerHTML="";
   for(let i=0;i<lead;i++) g.appendChild(el("div","cell pad"));
   for(let n=1;n<=dim;n++){
-    const d = new Date(2026, M.i, n), key = iso(d), p = PLAN[dow(d)];
+    const d = new Date(2026, M.i, n), key = iso(d), p = planFor(key);
     const c = el("button","cell"+(S.sessions[key]?" on":"")+(key===todayISO?" today":""));
     c.innerHTML = `<span class="n">${n}</span><span class="d" style="background:var(--${p.k==="pilates"?"pil":p.k.slice(0,3)}-fg)"></span>`;
     c.onclick = ()=>openSheet(key);
@@ -469,25 +517,43 @@ function renderMonth(){
 /* ================= sheet ================= */
 function openSheet(key){
   sheetDate = key;
-  const [y,m,dd] = key.split("-").map(Number);
-  const d = new Date(y,m-1,dd), p = PLAN[dow(d)];
+  const d = parse(key), p = planFor(key), swapped = S.swap[key] !== undefined;
   const b = document.getElementById("sheet-body");
   const done = !!S.sessions[key];
   b.innerHTML = `
     <div class="today-head">
       <div>
         <h2 class="day-name">${p.title}</h2>
-        <p class="day-date">${DAYNAMES[dow(d)]}, ${dd} ${MONTHNAMES[m-1]}</p>
+        <p class="day-date">${DAYNAMES[dow(d)]}, ${d.getDate()} ${MONTHNAMES[d.getMonth()]}</p>
       </div>${tagHTML(p)}
     </div>
-    <p class="when">${p.when}</p>
+    <p class="when">${p.when}${p.week?"  ·  Week "+p.week:""}${swapped?"  ·  Swapped":""}</p>
     <div style="margin-top:12px">${p.ex.map(x=>`<div class="ex"><span class="box"></span><span class="ex-t">${x}</span></div>`).join("")}</div>
     <p class="goal">${p.goal}</p>
     <button class="done-btn${done?" on":""}" id="s-done">${done?"Session done":"Mark session done"}</button>
     <hr class="hairline">
+    <p class="sub">Did something else that day?</p>
+    <div class="swaps" id="s-swap"></div>
+    <hr class="hairline">
     <p class="sub">Appointments and notes</p>
     <textarea class="note" id="s-note" placeholder="Hair appointment, Pilates booking, dinner…">${(S.notes[key]||"").replace(/</g,"&lt;")}</textarea>
   `;
+  const sw = document.getElementById("s-swap");
+  const opts = [[0,"Lower body"],[2,"Upper body"],[4,"Full body"],[1,"Run"],[5,"Pilates"],[6,"Rest"]];
+  opts.forEach(([i,label])=>{
+    const on = S.swap[key] === i;
+    const btn = el("button","swap"+(on?" on":""),label);
+    btn.onclick = ()=>{
+      if(S.swap[key] === i) delete S.swap[key]; else S.swap[key] = i;
+      save(); openSheet(key); renderMonth(); renderTrack(); renderToday();
+    };
+    sw.appendChild(btn);
+  });
+  if(swapped){
+    const clr = el("button","swap-clear","Back to the scheduled session");
+    clr.onclick = ()=>{ delete S.swap[key]; save(); openSheet(key); renderMonth(); renderTrack(); renderToday(); };
+    sw.appendChild(clr);
+  }
   document.getElementById("s-done").onclick = ()=>{
     S.sessions[key] = !S.sessions[key]; save(); openSheet(key); renderMonth(); renderTrack(); renderToday();
   };
@@ -509,7 +575,7 @@ function countsFor(mi){
     if(!S.sessions[k]) return;
     const [y,m,dd] = k.split("-").map(Number);
     if(y!==2026 || m-1!==M.i) return;
-    const kind = PLAN[dow(new Date(y,m-1,dd))].k;
+    const kind = planFor(k).k;
     if(c[kind]!==undefined) c[kind]++;
   });
   return c;
@@ -625,11 +691,51 @@ document.querySelectorAll("nav button").forEach(b=>{
   };
 });
 
+/* ================= backup ================= */
+function ioMsg(t){ const m=document.getElementById("io-msg"); m.textContent=t; setTimeout(()=>{ if(m.textContent===t) m.textContent=""; }, 6000); }
+
+document.getElementById("do-export").onclick = ()=>{
+  try{
+    const blob = new Blob([JSON.stringify(S,null,2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "glow-up-backup-"+todayISO+".json";
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+    ioMsg("Backup saved. Email it to yourself to keep it safe.");
+  }catch(e){ ioMsg("Could not save the backup on this browser."); }
+};
+
+document.getElementById("do-import").onclick = ()=> document.getElementById("import-file").click();
+
+document.getElementById("import-file").onchange = e => {
+  const f = e.target.files[0]; if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const data = JSON.parse(r.result);
+      if(typeof data !== "object" || data === null) throw new Error("not an object");
+      ["sessions","ex","habits","notes","teeth","reset","fields","swap"].forEach(k=>{
+        if(data[k] && typeof data[k] === "object") S[k] = data[k];
+      });
+      save();
+      renderToday(); renderMonth(); renderTrack(); renderBeauty(); renderReset();
+      ioMsg("Backup restored.");
+    }catch(err){ ioMsg("That file isn’t a Glow-Up backup. Pick the .json file you saved."); }
+  };
+  r.onerror = () => ioMsg("Could not read that file.");
+  r.readAsText(f);
+  e.target.value = "";
+};
+
 /* ================= boot ================= */
 (async function(){
   await load();
   const mi = monthOf(todayISO);
   if(mi>=0){ curMonth = mi; resetMonth = mi; }
   renderToday(); renderMonth(); renderTrack(); renderBeauty(); renderReset();
+  if("serviceWorker" in navigator && location.protocol.startsWith("http")){
+    navigator.serviceWorker.register("sw.js").catch(()=>{ /* offline mode unavailable, app still works online */ });
+  }
 })();
 </script>
