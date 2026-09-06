@@ -1,0 +1,635 @@
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#EFE9E1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Glow-Up">
+<title>Summer 2026 Glow-Up</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500&family=Jost:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --canvas:#EFE9E1; --paper:#FDFBF8; --ivory:#F7F2EB; --ink:#2A2622;
+  --t1:#2A2622; --t2:#7A6E63; --t3:#A69A8D; --inv:#F7F2EB;
+  --clay:#A9805E; --clay-soft:#E8D9C9;
+  --line:#E3DAD0; --line-strong:#CFC3B6;
+  --gym-bg:#EADFD2; --gym-fg:#8A6440;
+  --run-bg:#DFE6DE; --run-fg:#5F7059;
+  --pil-bg:#E9DFE1; --pil-fg:#86656B;
+  --bty-bg:#E5E1E8; --bty-fg:#6E6779;
+  --rst-bg:#E9E6E2; --rst-fg:#7C756E;
+  --serif:"Cormorant Garamond",Georgia,"Times New Roman",serif;
+  --sans:"Jost",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif;
+  --r:8px; --rl:16px;
+  --nav:calc(64px + env(safe-area-inset-bottom));
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{
+  background:var(--canvas); color:var(--t1); font-family:var(--sans);
+  font-size:15px; line-height:1.6; letter-spacing:.005em;
+  -webkit-font-smoothing:antialiased;
+}
+#app{max-width:520px;margin:0 auto;padding:0 20px var(--nav);min-height:100vh}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--clay);outline-offset:2px;border-radius:4px}
+
+/* ---------- header ---------- */
+.top{padding:calc(22px + env(safe-area-inset-top)) 0 18px}
+.kicker{font-size:10px;letter-spacing:.18em;color:var(--t3);text-transform:uppercase}
+.h1{font-family:var(--serif);font-weight:300;font-size:38px;line-height:1.08;margin:8px 0 0}
+.h1 em{font-style:normal}
+.lede{color:var(--t2);font-size:13.5px;margin:8px 0 0;max-width:44ch}
+.rule{height:1px;background:var(--line-strong);margin:16px 0 0;border:0}
+
+/* ---------- cards ---------- */
+.card{background:var(--paper);border:1px solid var(--line);border-radius:var(--rl);padding:22px}
+.card+.card{margin-top:14px}
+.sec{margin-top:30px}
+.sec-h{font-family:var(--serif);font-weight:500;font-size:23px;margin:0 0 12px}
+.sub{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3);margin:0 0 10px}
+.hairline{height:1px;background:var(--line);border:0;margin:16px 0}
+
+/* ---------- tags ---------- */
+.tag{display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 8px;border-radius:4px;
+  font-size:9.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;white-space:nowrap}
+.tag i{width:5px;height:5px;border-radius:50%;background:currentColor;flex:none}
+.t-gym{background:var(--gym-bg);color:var(--gym-fg)}
+.t-run{background:var(--run-bg);color:var(--run-fg)}
+.t-pilates{background:var(--pil-bg);color:var(--pil-fg)}
+.t-beauty{background:var(--bty-bg);color:var(--bty-fg)}
+.t-rest{background:var(--rst-bg);color:var(--rst-fg)}
+
+/* ---------- today ---------- */
+.today-head{display:flex;align-items:flex-start;justify-content:space-between;gap:14px}
+.day-name{font-family:var(--serif);font-weight:500;font-size:26px;line-height:1.15;margin:0}
+.day-date{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--t3);margin:4px 0 0}
+.when{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--clay);margin:14px 0 0}
+.ex{display:flex;align-items:flex-start;gap:12px;padding:11px 0;border-top:1px solid var(--line);text-align:left;width:100%}
+.ex:first-of-type{border-top:0}
+.ex-t{flex:1;font-size:14px;color:var(--t2);transition:color .15s,opacity .15s}
+.ex.on .ex-t{color:var(--t3);text-decoration:line-through;text-decoration-color:var(--line-strong)}
+.box{width:17px;height:17px;flex:none;margin-top:2px;border:1px solid var(--line-strong);border-radius:4px;
+  background:var(--paper);position:relative;transition:background .15s,border-color .15s}
+.box.on{background:var(--clay);border-color:var(--clay)}
+.box.on::after{content:"";position:absolute;left:5px;top:2px;width:4px;height:8px;
+  border:solid var(--inv);border-width:0 1.6px 1.6px 0;transform:rotate(42deg)}
+.goal{font-size:9.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--clay);margin-top:4px}
+
+.done-btn{width:100%;margin-top:16px;padding:15px;border-radius:var(--r);border:1px solid var(--ink);
+  background:var(--ink);color:var(--inv);font-size:11px;letter-spacing:.16em;text-transform:uppercase;
+  transition:background .18s,color .18s}
+.done-btn.on{background:transparent;color:var(--ink)}
+.done-btn.on::before{content:"✓  "}
+
+/* ---------- habits ---------- */
+.hrow{display:flex;align-items:center;gap:12px;padding:12px 0;border-top:1px solid var(--line);width:100%;text-align:left}
+.hrow:first-of-type{border-top:0}
+.hrow span{flex:1;font-size:13.5px;color:var(--t2)}
+.hrow.on span{color:var(--t3)}
+
+/* ---------- month grid ---------- */
+.mtabs{display:flex;gap:6px;margin:0 0 16px}
+.mtab{flex:1;padding:11px 0;border:1px solid var(--line);border-radius:var(--r);background:var(--paper);
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--t2);transition:.15s}
+.mtab[aria-selected="true"]{background:var(--ink);border-color:var(--ink);color:var(--inv)}
+.dow{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:6px}
+.dow span{text-align:center;font-size:9px;letter-spacing:.08em;color:var(--t3);text-transform:uppercase}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.cell{aspect-ratio:1/1.15;border:1px solid var(--line);border-radius:6px;background:var(--paper);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:5px;padding:2px;transition:.15s}
+.cell.pad{background:transparent;border-color:transparent}
+.cell .n{font-size:12px;font-weight:500;color:var(--t2);letter-spacing:.02em}
+.cell .d{width:6px;height:6px;border-radius:50%}
+.cell.today{border-color:var(--ink);border-width:1.5px}
+.cell.on{background:var(--ink);border-color:var(--ink)}
+.cell.on .n{color:var(--inv)}
+.cell.on .d{background:var(--clay)!important}
+.legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+
+/* ---------- detail sheet ---------- */
+.sheet-bg{position:fixed;inset:0;background:rgba(42,38,34,.42);z-index:40;opacity:0;pointer-events:none;transition:opacity .22s}
+.sheet-bg.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;max-width:520px;margin:0 auto;
+  background:var(--ivory);border-radius:20px 20px 0 0;padding:26px 22px calc(26px + env(safe-area-inset-bottom));
+  transform:translateY(102%);transition:transform .28s cubic-bezier(.32,.72,0,1);max-height:86vh;overflow-y:auto}
+.sheet.open{transform:translateY(0)}
+.grab{width:38px;height:4px;border-radius:2px;background:var(--line-strong);margin:-8px auto 18px}
+.note{width:100%;margin-top:10px;padding:13px;border:1px solid var(--line);border-radius:var(--r);
+  background:var(--paper);font-family:var(--sans);font-size:14px;color:var(--t1);resize:vertical;min-height:78px}
+.note::placeholder{color:var(--t3)}
+
+/* ---------- progress ---------- */
+.stat{display:flex;align-items:baseline;justify-content:space-between;margin-bottom:9px}
+.stat b{font-family:var(--serif);font-weight:400;font-size:30px;letter-spacing:.01em}
+.stat span{font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:var(--t3)}
+.bar{height:5px;border-radius:3px;background:var(--clay-soft);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--clay);border-radius:3px;transition:width .4s ease}
+.pips{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}
+.pip{width:15px;height:15px;border-radius:4px;border:1px solid var(--line-strong);background:var(--paper)}
+.pip.on{background:var(--clay);border-color:var(--clay)}
+
+.field label{display:block;font-size:11px;color:var(--t3);margin-bottom:6px}
+.field input{width:100%;padding:9px 0;border:0;border-bottom:1px solid var(--line);background:none;
+  font-family:var(--sans);font-size:14px;color:var(--t1)}
+.field input:focus{outline:none;border-bottom-color:var(--clay)}
+.field+.field{margin-top:16px}
+
+.quote{background:var(--ink);color:var(--inv);border-radius:var(--rl);padding:30px 26px;text-align:center;
+  font-family:var(--serif);font-size:20px;line-height:1.5;font-weight:300}
+
+/* ---------- nav ---------- */
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;max-width:520px;margin:0 auto;
+  background:rgba(253,251,248,.94);backdrop-filter:blur(14px);border-top:1px solid var(--line);
+  display:grid;grid-template-columns:repeat(5,1fr);padding-bottom:env(safe-area-inset-bottom)}
+nav button{padding:11px 2px 12px;font-size:9.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);
+  display:flex;flex-direction:column;align-items:center;gap:5px}
+nav button[aria-current="page"]{color:var(--ink)}
+nav svg{width:19px;height:19px;stroke:currentColor;fill:none;stroke-width:1.4;stroke-linecap:round;stroke-linejoin:round}
+
+.view{display:none}
+.view.on{display:block}
+.saving{position:fixed;top:calc(10px + env(safe-area-inset-top));left:50%;transform:translateX(-50%);
+  background:var(--ink);color:var(--inv);font-size:10px;letter-spacing:.12em;text-transform:uppercase;
+  padding:7px 14px;border-radius:20px;opacity:0;transition:opacity .2s;z-index:60;pointer-events:none}
+.saving.on{opacity:1}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div id="app">
+  <div id="saving" class="saving">Saved</div>
+
+  <!-- ============ TODAY ============ -->
+  <section id="v-today" class="view on">
+    <div class="top">
+      <div class="kicker">Summer 2026 Glow-Up</div>
+      <h1 class="h1" id="t-greet">Today</h1>
+      <p class="lede" id="t-sub"></p>
+      <hr class="rule">
+    </div>
+    <div class="card">
+      <div class="today-head">
+        <div>
+          <h2 class="day-name" id="t-title"></h2>
+          <p class="day-date" id="t-date"></p>
+        </div>
+        <span id="t-tag"></span>
+      </div>
+      <p class="when" id="t-when"></p>
+      <div id="t-ex" style="margin-top:14px"></div>
+      <p class="goal" id="t-goal"></p>
+      <button class="done-btn" id="t-done">Mark session done</button>
+    </div>
+
+    <div class="sec">
+      <h3 class="sec-h">Daily care</h3>
+      <div class="card" id="t-habits"></div>
+    </div>
+
+    <div class="sec">
+      <div class="card">
+        <p class="sub">This month</p>
+        <p style="margin:0;color:var(--t2);font-size:13.5px" id="t-focus"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MONTH ============ -->
+  <section id="v-month" class="view">
+    <div class="top">
+      <div class="kicker">Calendar</div>
+      <h1 class="h1" id="m-title">September</h1>
+      <p class="lede" id="m-focus"></p>
+      <hr class="rule">
+    </div>
+    <div class="mtabs" id="m-tabs" role="tablist"></div>
+    <div class="dow"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+    <div class="grid" id="m-grid"></div>
+    <div class="legend">
+      <span class="tag t-gym"><i></i>Gym</span>
+      <span class="tag t-run"><i></i>Run</span>
+      <span class="tag t-pilates"><i></i>Pilates</span>
+      <span class="tag t-rest"><i></i>Rest</span>
+    </div>
+    <div class="sec">
+      <div class="card">
+        <p class="sub">Tip</p>
+        <p style="margin:0;color:var(--t2);font-size:13.5px">Tap any day to see the session, tick it off, or add an appointment.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TRACK ============ -->
+  <section id="v-track" class="view">
+    <div class="top">
+      <div class="kicker">Fitness</div>
+      <h1 class="h1">Progress,<br>not perfection</h1>
+      <p class="lede">A month with ten sessions instead of twelve is still a month that worked.</p>
+      <hr class="rule">
+    </div>
+    <div id="k-months"></div>
+  </section>
+
+  <!-- ============ BEAUTY ============ -->
+  <section id="v-beauty" class="view">
+    <div class="top">
+      <div class="kicker">Maintenance</div>
+      <h1 class="h1">Beauty</h1>
+      <p class="lede">Fewer products, done more often. Everything here survives a site day.</p>
+      <hr class="rule">
+    </div>
+
+    <div class="card">
+      <h3 class="sec-h" style="font-size:21px">This week</h3>
+      <div id="b-week"></div>
+    </div>
+
+    <div class="sec">
+      <h3 class="sec-h">Teeth whitening</h3>
+      <div class="card">
+        <p style="margin:0 0 4px;color:var(--t2);font-size:13.5px">Follow the product instructions. Tick one box per application.</p>
+        <div id="b-teeth"></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3 class="sec-h">Hair &amp; nails</h3>
+      <div class="card">
+        <p class="sub">Next hair appointment</p>
+        <p style="margin:0 0 18px;font-family:var(--serif);font-size:22px">December</p>
+        <hr class="hairline">
+        <div class="field"><label>Last manicure</label><input data-f="mani" placeholder="Date"></div>
+        <div class="field"><label>Last pedicure</label><input data-f="pedi" placeholder="Date"></div>
+        <div class="field"><label>Next appointment</label><input data-f="nextnail" placeholder="Date"></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="card" style="background:var(--bty-bg);border-color:transparent">
+        <p style="margin:0;color:var(--bty-fg);font-size:13.5px">Do not over-exfoliate or use a physical scrub every night.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ RESET ============ -->
+  <section id="v-reset" class="view">
+    <div class="top">
+      <div class="kicker">End of month</div>
+      <h1 class="h1">The monthly reset</h1>
+      <p class="lede">Twenty minutes. This is what keeps the plan from quietly falling apart.</p>
+      <hr class="rule">
+    </div>
+    <div class="mtabs" id="r-tabs" role="tablist"></div>
+    <div id="r-body"></div>
+    <div class="sec">
+      <div class="quote">The goal isn’t to look good for one day in December. It’s to build a routine that feels good all summer.</div>
+    </div>
+  </section>
+</div>
+
+<div class="sheet-bg" id="sheet-bg"></div>
+<div class="sheet" id="sheet" role="dialog" aria-modal="true"><div class="grab"></div><div id="sheet-body"></div></div>
+
+<nav>
+  <button data-v="today" aria-current="page"><svg viewBox="0 0 24 24"><path d="M12 3v3M12 21v-3M3 12h3M21 12h-3M5.6 5.6l2.1 2.1M18.4 18.4l-2.1-2.1M5.6 18.4l2.1-2.1M18.4 5.6l-2.1 2.1"/><circle cx="12" cy="12" r="3.4"/></svg>Today</button>
+  <button data-v="month"><svg viewBox="0 0 24 24"><rect x="3.5" y="5" width="17" height="15.5" rx="2.5"/><path d="M3.5 9.6h17M8 3.5v3M16 3.5v3"/></svg>Month</button>
+  <button data-v="track"><svg viewBox="0 0 24 24"><path d="M4 19.5V13M9.3 19.5V8M14.7 19.5v-6M20 19.5V4.5"/></svg>Track</button>
+  <button data-v="beauty"><svg viewBox="0 0 24 24"><path d="M12 3.5c2.6 2.9 4.6 5.4 4.6 8.4a4.6 4.6 0 0 1-9.2 0c0-3 2-5.5 4.6-8.4Z"/></svg>Beauty</button>
+  <button data-v="reset"><svg viewBox="0 0 24 24"><path d="M20 12a8 8 0 1 1-2.6-5.9M20 4v4.5h-4.5"/></svg>Reset</button>
+</nav>
+
+<script>
+/* ================= data ================= */
+const PLAN = [
+  {k:"gym", label:"Gym", title:"Lower body: glutes + legs", when:"5:00 – 6:00 am",
+   goal:"Strength + glutes + legs",
+   ex:["Hip thrusts — 4 × 8–10","Romanian deadlifts — 3 × 8–10","Bulgarian split squats — 3 × 10 each leg",
+       "Leg press — 3 × 10–12","Seated or lying leg curl — 3 × 10–12","Optional: 5 min incline treadmill"]},
+  {k:"run", label:"Run", title:"Easy run", when:"After work", goal:"Cardio + recovery + consistency",
+   ex:["25–40 minutes","Comfortable, conversational pace","Easy and enjoyable, no pressure on pace"]},
+  {k:"gym", label:"Gym", title:"Upper body + core", when:"5:00 – 6:00 am",
+   goal:"Definition + posture + core",
+   ex:["Lat pulldown — 3 × 8–12","Seated cable row — 3 × 8–12","Dumbbell shoulder press — 3 × 8–10",
+       "Incline dumbbell press — 3 × 8–10","Lateral raises — 3 × 12–15","Cable tricep pushdowns — 2–3 × 10–12",
+       "Hanging knee raises — 3 sets","Cable crunches — 3 × 12","Plank — 2 × 45–60 sec"]},
+  {k:"run", label:"Run", title:"Interval or steady run", when:"After work", goal:"Running + cardiovascular fitness",
+   ex:["Week A · 5 min warm-up","Week A · 6 × 2 min faster","Week A · 2 min easy between intervals","Week A · Cool down",
+       "Week B · 25–35 min steady","Week B · Slightly faster than Tuesday, not race pace"]},
+  {k:"gym", label:"Gym", title:"Full body + glutes", when:"5:00 – 6:00 am", goal:"Full-body strength + shape",
+   ex:["Squats or hack squats — 3 × 8–10","Hip thrust or glute bridge — 3 × 10","Walking lunges — 3 × 12 each leg",
+       "Assisted pull-ups or lat pulldown — 3 × 8–10","Chest-supported row — 3 × 10",
+       "Cable glute kickbacks or abductions — 3 × 12–15","Optional: 5–10 min easy incline walking"]},
+  {k:"pilates", label:"Pilates", title:"Reformer Pilates, walk or social movement", when:"Flexible",
+   goal:"Mobility + enjoyment",
+   ex:["Reformer Pilates class","Or a long walk","Pilates is a bonus. A missed session is not a failed plan."]},
+  {k:"rest", label:"Rest", title:"Rest + reset", when:"Sunday", goal:"Recovery + preparation",
+   ex:["Rest","Light walk if you feel like it","Plan site-day snacks and lunches","Review the week ahead",
+       "Weekly hair treatment","Body care: exfoliate and moisturise"]}
+];
+
+const MONTHS = [
+  {i:8, name:"September", focus:"Reset and foundation. Build the habit before you build the load.",
+   note:"Pilates target: about 2 sessions. Start teeth whitening per the product instructions."},
+  {i:9, name:"October", focus:"Consistency and refinement. Progress the weights, keep the routine.",
+   note:"Pilates target: about 3 sessions. Weekly hair treatment on Sundays. Start nail maintenance."},
+  {i:10, name:"November", focus:"Summer prep. Polish what is already working.",
+   note:"Pilates weekly where recovery allows. Book December beauty appointments early."},
+  {i:11, name:"December", focus:"Final polish. Maintain, don’t panic.",
+   note:"December hair appointment. Keep moving around holiday plans. Flexibility over perfection."}
+];
+
+const HABITS = [
+  ["am","Morning skincare"],["pm","Evening skincare"],["spf","SPF"],
+  ["moist","Body moisturiser"],["teeth","Teeth whitening"],
+  ["exf","Body exfoliation"],["hair","Hair treatment"]
+];
+
+const RESET = {
+  Fitness:["Review gym consistency","Review weights and progression","Plan next month’s Pilates sessions","Review running consistency"],
+  Beauty:["Check skincare products","Plan nail maintenance","Hair treatment stock check","Plan upcoming appointments","Review whitening progress"],
+  Lifestyle:["Review site-day lunches and snacks","Check wardrobe gaps","Plan one self-care activity","Progress photos if you want them"]
+};
+
+const DAYNAMES=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+const MONTHNAMES=["January","February","March","April","May","June","July","August","September","October","November","December"];
+
+/* ================= state ================= */
+const KEY = "glowup:v1";
+let S = { sessions:{}, ex:{}, habits:{}, notes:{}, teeth:{}, reset:{}, fields:{} };
+let curMonth = 0, resetMonth = 0, sheetDate = null, saveTimer = null;
+
+const iso = d => d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const dow = d => (d.getDay()+6)%7;
+const today = new Date();
+const todayISO = iso(today);
+
+/* Saves to the browser first. Falls back to Claude's own storage
+   if this file is being previewed inside a chat, where localStorage is blocked. */
+let store = null;
+function pickStore(){
+  try{
+    const probe = "__glowup_probe__";
+    window.localStorage.setItem(probe, "1");
+    window.localStorage.removeItem(probe);
+    return {
+      get: async k => { const v = window.localStorage.getItem(k); return v==null ? null : {value:v}; },
+      set: async (k,v) => window.localStorage.setItem(k,v)
+    };
+  }catch(e){
+    if(window.storage) return window.storage;
+    return { get: async ()=>null, set: async ()=>{} };
+  }
+}
+async function load(){
+  store = pickStore();
+  try{
+    const r = await store.get(KEY);
+    if(r && r.value) S = Object.assign(S, JSON.parse(r.value));
+  }catch(e){ /* first run, nothing saved yet */ }
+}
+function save(){
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async ()=>{
+    try{
+      await store.set(KEY, JSON.stringify(S));
+      const el = document.getElementById("saving");
+      el.classList.add("on"); setTimeout(()=>el.classList.remove("on"), 900);
+    }catch(e){ console.error("Could not save", e); }
+  }, 350);
+}
+const el = (t,c,x)=>{const n=document.createElement(t); if(c)n.className=c; if(x!=null)n.textContent=x; return n;};
+const tagHTML = p => `<span class="tag t-${p.k}"><i></i>${p.label}</span>`;
+function monthOf(dateStr){ return MONTHS.findIndex(m => m.i === +dateStr.slice(5,7)-1 ); }
+
+/* ================= today ================= */
+function renderToday(){
+  const d = today, w = dow(d), p = PLAN[w];
+  const hour = d.getHours();
+  document.getElementById("t-greet").textContent = hour<12 ? "Good morning" : hour<17 ? "Good afternoon" : "Good evening";
+  const mi = monthOf(todayISO);
+  document.getElementById("t-sub").textContent = mi>=0 ? MONTHS[mi].focus : "Outside the plan window, but the routine still stands.";
+  document.getElementById("t-title").textContent = p.title;
+  document.getElementById("t-date").textContent = DAYNAMES[w]+", "+d.getDate()+" "+MONTHNAMES[d.getMonth()];
+  document.getElementById("t-tag").innerHTML = tagHTML(p);
+  document.getElementById("t-when").textContent = p.when;
+  document.getElementById("t-goal").textContent = p.goal;
+  document.getElementById("t-focus").textContent = mi>=0 ? MONTHS[mi].note : "—";
+
+  const wrap = document.getElementById("t-ex"); wrap.innerHTML="";
+  p.ex.forEach((x,i)=>{
+    const on = !!(S.ex[todayISO]||{})[i];
+    const b = el("button","ex"+(on?" on":""));
+    b.innerHTML = `<span class="box${on?" on":""}"></span><span class="ex-t">${x}</span>`;
+    b.onclick = ()=>{ S.ex[todayISO]=S.ex[todayISO]||{}; S.ex[todayISO][i]=!S.ex[todayISO][i]; save(); renderToday(); };
+    wrap.appendChild(b);
+  });
+
+  const btn = document.getElementById("t-done");
+  const done = !!S.sessions[todayISO];
+  btn.classList.toggle("on", done);
+  btn.textContent = done ? "Session done" : "Mark session done";
+  btn.onclick = ()=>{ S.sessions[todayISO] = !S.sessions[todayISO]; save(); renderToday(); renderMonth(); renderTrack(); };
+
+  const hw = document.getElementById("t-habits"); hw.innerHTML="";
+  HABITS.forEach(([k,label])=>{
+    const on = !!(S.habits[todayISO]||{})[k];
+    const b = el("button","hrow"+(on?" on":""));
+    b.innerHTML = `<span class="box${on?" on":""}"></span><span>${label}</span>`;
+    b.onclick = ()=>{ S.habits[todayISO]=S.habits[todayISO]||{}; S.habits[todayISO][k]=!S.habits[todayISO][k]; save(); renderToday(); renderBeauty(); };
+    hw.appendChild(b);
+  });
+}
+
+/* ================= month ================= */
+function renderMonth(){
+  const tabs = document.getElementById("m-tabs"); tabs.innerHTML="";
+  MONTHS.forEach((m,i)=>{
+    const b = el("button","mtab",m.name.slice(0,3));
+    b.setAttribute("role","tab"); b.setAttribute("aria-selected", i===curMonth);
+    b.onclick = ()=>{ curMonth=i; renderMonth(); };
+    tabs.appendChild(b);
+  });
+  const M = MONTHS[curMonth];
+  document.getElementById("m-title").textContent = M.name;
+  document.getElementById("m-focus").textContent = M.note;
+
+  const first = new Date(2026, M.i, 1), lead = dow(first);
+  const dim = new Date(2026, M.i+1, 0).getDate();
+  const g = document.getElementById("m-grid"); g.innerHTML="";
+  for(let i=0;i<lead;i++) g.appendChild(el("div","cell pad"));
+  for(let n=1;n<=dim;n++){
+    const d = new Date(2026, M.i, n), key = iso(d), p = PLAN[dow(d)];
+    const c = el("button","cell"+(S.sessions[key]?" on":"")+(key===todayISO?" today":""));
+    c.innerHTML = `<span class="n">${n}</span><span class="d" style="background:var(--${p.k==="pilates"?"pil":p.k.slice(0,3)}-fg)"></span>`;
+    c.onclick = ()=>openSheet(key);
+    g.appendChild(c);
+  }
+}
+
+/* ================= sheet ================= */
+function openSheet(key){
+  sheetDate = key;
+  const [y,m,dd] = key.split("-").map(Number);
+  const d = new Date(y,m-1,dd), p = PLAN[dow(d)];
+  const b = document.getElementById("sheet-body");
+  const done = !!S.sessions[key];
+  b.innerHTML = `
+    <div class="today-head">
+      <div>
+        <h2 class="day-name">${p.title}</h2>
+        <p class="day-date">${DAYNAMES[dow(d)]}, ${dd} ${MONTHNAMES[m-1]}</p>
+      </div>${tagHTML(p)}
+    </div>
+    <p class="when">${p.when}</p>
+    <div style="margin-top:12px">${p.ex.map(x=>`<div class="ex"><span class="box"></span><span class="ex-t">${x}</span></div>`).join("")}</div>
+    <p class="goal">${p.goal}</p>
+    <button class="done-btn${done?" on":""}" id="s-done">${done?"Session done":"Mark session done"}</button>
+    <hr class="hairline">
+    <p class="sub">Appointments and notes</p>
+    <textarea class="note" id="s-note" placeholder="Hair appointment, Pilates booking, dinner…">${(S.notes[key]||"").replace(/</g,"&lt;")}</textarea>
+  `;
+  document.getElementById("s-done").onclick = ()=>{
+    S.sessions[key] = !S.sessions[key]; save(); openSheet(key); renderMonth(); renderTrack(); renderToday();
+  };
+  document.getElementById("s-note").oninput = e => { S.notes[key]=e.target.value; save(); };
+  document.getElementById("sheet").classList.add("open");
+  document.getElementById("sheet-bg").classList.add("open");
+}
+function closeSheet(){
+  document.getElementById("sheet").classList.remove("open");
+  document.getElementById("sheet-bg").classList.remove("open");
+}
+document.getElementById("sheet-bg").onclick = closeSheet;
+document.addEventListener("keydown", e => { if(e.key==="Escape") closeSheet(); });
+
+/* ================= track ================= */
+function countsFor(mi){
+  const M = MONTHS[mi], c = {gym:0, run:0, pilates:0};
+  Object.keys(S.sessions).forEach(k=>{
+    if(!S.sessions[k]) return;
+    const [y,m,dd] = k.split("-").map(Number);
+    if(y!==2026 || m-1!==M.i) return;
+    const kind = PLAN[dow(new Date(y,m-1,dd))].k;
+    if(c[kind]!==undefined) c[kind]++;
+  });
+  return c;
+}
+function renderTrack(){
+  const wrap = document.getElementById("k-months"); wrap.innerHTML="";
+  MONTHS.forEach((M,mi)=>{
+    const c = countsFor(mi);
+    const sec = el("div","sec");
+    sec.innerHTML = `<h3 class="sec-h">${M.name}</h3>`;
+    const card = el("div","card");
+    card.innerHTML = `
+      <div class="stat"><b>${c.gym}<span style="font-size:15px;color:var(--t3)"> / 12</span></b><span>Gym</span></div>
+      <div class="bar"><i style="width:${Math.min(100,c.gym/12*100)}%"></i></div>
+      <div class="stat" style="margin-top:20px"><b>${c.run}<span style="font-size:15px;color:var(--t3)"> / 8</span></b><span>Runs</span></div>
+      <div class="bar"><i style="width:${Math.min(100,c.run/8*100)}%"></i></div>
+      <div class="stat" style="margin-top:20px"><b>${c.pilates}</b><span>Pilates</span></div>
+      <hr class="hairline">
+      <div class="field"><label>Strongest lift or strength win</label><input data-f="lift-${mi}"></div>
+      <div class="field"><label>Energy level</label><input data-f="energy-${mi}"></div>
+      <div class="field"><label>One thing I improved</label><input data-f="better-${mi}"></div>
+    `;
+    sec.appendChild(card); wrap.appendChild(sec);
+  });
+  bindFields();
+}
+
+/* ================= beauty ================= */
+function renderBeauty(){
+  const monday = new Date(today); monday.setDate(today.getDate()-dow(today));
+  const week = [...Array(7)].map((_,i)=>{ const d=new Date(monday); d.setDate(monday.getDate()+i); return iso(d); });
+  const w = document.getElementById("b-week"); w.innerHTML="";
+  HABITS.forEach(([k,label])=>{
+    const row = el("div","hrow");
+    const done = week.filter(dt => (S.habits[dt]||{})[k]).length;
+    row.innerHTML = `<span>${label}</span><span style="flex:none;display:flex;gap:5px">`+
+      week.map(dt=>`<span class="pip${(S.habits[dt]||{})[k]?" on":""}" data-d="${dt}" data-k="${k}" style="width:13px;height:13px;cursor:pointer"></span>`).join("")+
+      `</span>`;
+    w.appendChild(row);
+  });
+  w.querySelectorAll(".pip").forEach(p=>{
+    p.onclick = ()=>{ const dt=p.dataset.d, k=p.dataset.k;
+      S.habits[dt]=S.habits[dt]||{}; S.habits[dt][k]=!S.habits[dt][k]; save(); renderBeauty(); renderToday(); };
+  });
+
+  const t = document.getElementById("b-teeth"); t.innerHTML="";
+  ["Cycle one","Cycle two","Cycle three"].forEach((c,ci)=>{
+    const blk = el("div"); blk.style.marginTop="18px";
+    blk.innerHTML = `<p class="sub" style="margin-bottom:8px">${c}</p><div class="pips">`+
+      [...Array(7)].map((_,i)=>`<span class="pip${(S.teeth[ci]||{})[i]?" on":""}" data-c="${ci}" data-i="${i}"></span>`).join("")+`</div>`;
+    t.appendChild(blk);
+  });
+  t.querySelectorAll(".pip").forEach(p=>{
+    p.style.cursor="pointer";
+    p.onclick = ()=>{ const ci=p.dataset.c, i=p.dataset.i;
+      S.teeth[ci]=S.teeth[ci]||{}; S.teeth[ci][i]=!S.teeth[ci][i]; save(); renderBeauty(); };
+  });
+  bindFields();
+}
+
+/* ================= reset ================= */
+function renderReset(){
+  const tabs = document.getElementById("r-tabs"); tabs.innerHTML="";
+  MONTHS.forEach((m,i)=>{
+    const b = el("button","mtab",m.name.slice(0,3));
+    b.setAttribute("role","tab"); b.setAttribute("aria-selected", i===resetMonth);
+    b.onclick = ()=>{ resetMonth=i; renderReset(); };
+    tabs.appendChild(b);
+  });
+  const body = document.getElementById("r-body"); body.innerHTML="";
+  Object.entries(RESET).forEach(([group,items])=>{
+    const sec = el("div","sec");
+    sec.innerHTML = `<h3 class="sec-h">${group}</h3>`;
+    const card = el("div","card");
+    items.forEach((it,i)=>{
+      const id = resetMonth+":"+group+":"+i;
+      const on = !!S.reset[id];
+      const b = el("button","hrow"+(on?" on":""));
+      b.innerHTML = `<span class="box${on?" on":""}"></span><span>${it}</span>`;
+      b.onclick = ()=>{ S.reset[id]=!S.reset[id]; save(); renderReset(); };
+      card.appendChild(b);
+    });
+    sec.appendChild(card); body.appendChild(sec);
+  });
+  const sec = el("div","sec");
+  sec.innerHTML = `<h3 class="sec-h">Close the month</h3>`;
+  const card = el("div","card");
+  card.innerHTML = `
+    <div class="field"><label>What I’m proud of</label><input data-f="proud-${resetMonth}"></div>
+    <div class="field"><label>What I want to carry forward</label><input data-f="carry-${resetMonth}"></div>
+    <div class="field"><label>One thing I’ll make easier for myself</label><input data-f="easier-${resetMonth}"></div>`;
+  sec.appendChild(card); body.appendChild(sec);
+  bindFields();
+}
+
+function bindFields(){
+  document.querySelectorAll("input[data-f]").forEach(inp=>{
+    if(inp.dataset.bound) return;
+    inp.dataset.bound = "1";
+    inp.value = S.fields[inp.dataset.f] || "";
+    inp.oninput = ()=>{ S.fields[inp.dataset.f] = inp.value; save(); };
+  });
+}
+
+/* ================= nav ================= */
+document.querySelectorAll("nav button").forEach(b=>{
+  b.onclick = ()=>{
+    document.querySelectorAll("nav button").forEach(x=>x.removeAttribute("aria-current"));
+    b.setAttribute("aria-current","page");
+    document.querySelectorAll(".view").forEach(v=>v.classList.remove("on"));
+    document.getElementById("v-"+b.dataset.v).classList.add("on");
+    window.scrollTo(0,0);
+  };
+});
+
+/* ================= boot ================= */
+(async function(){
+  await load();
+  const mi = monthOf(todayISO);
+  if(mi>=0){ curMonth = mi; resetMonth = mi; }
+  renderToday(); renderMonth(); renderTrack(); renderBeauty(); renderReset();
+})();
+</script>
