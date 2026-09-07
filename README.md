@@ -56,11 +56,11 @@ worker, not a bug.
 | `apple-touch-icon.png` | 11 KB | iOS home screen icon, referenced by `<link rel="apple-touch-icon">`. |
 | `hero-today.jpg` | 114 KB | Background image for the Today view hero, referenced in CSS (`.hero::before`). |
 | `hero-beauty.jpg` | 68 KB | Background image for the Beauty view banner, referenced in CSS (`.banner::before`). |
-| `bg-sand.jpg` | 56 KB | Full-page background, referenced by path in CSS (`body::before`). Previously embedded as a base64 blob; see Gotchas. |
 
 Everything `index.html` references is present in the repo, and nothing is
-orphaned any more. `icon-alt-sage.png` and `icon-alt-umber.png` were removed
-(19 KB and 20 KB) — they were committed but referenced nowhere.
+orphaned any more. `icon-alt-sage.png`, `icon-alt-umber.png`, and
+`bg-sand.jpg` were removed after becoming unreferenced — see Gotchas for why
+`bg-sand.jpg` went away.
 
 ## Map of `index.html`
 
@@ -168,18 +168,16 @@ other day of the week ignores the letter entirely.
 
 ## Gotchas
 
-- **The background image used to be a base64 blob.** `body::before` in the
-  CSS previously embedded the page background as a ~76,000-character base64
-  JPEG data URI on a single line, because the image 404'd when referenced by
-  path at the time. It has since been switched to a normal path reference
-  (`url(bg-sand.jpg)`), matching how `hero-today.jpg` and `hero-beauty.jpg`
-  already worked. `index.html` is now 48 KB instead of 122 KB and safe to
-  open directly. **This was verified against a local server, not the live
-  GitHub Pages deployment** — the sandbox this change was made in couldn't
-  reach `jodilourenss-rgb.github.io`. Confirm the background still loads
-  after your next deploy; if it 404s again, that points to something about
-  the Pages build rather than the path syntax, since the two hero images use
-  the identical pattern.
+- **There is no global page background image any more.** An earlier version
+  of `index.html` embedded a page-wide background photo as a base64 blob on
+  `body::before` (later switched to a normal `bg-sand.jpg` path reference).
+  That layer was removed entirely: it rendered behind every view with no
+  opaque backdrop between it and the page chrome, so the top bar title and
+  `.lbl` section labels on Month/Track/Beauty/Reset sat directly on the photo
+  and were nearly illegible wherever the photo was light. The page background
+  is now just `html{background:var(--cream)}` everywhere except Home, which
+  has its own scoped `#v-home::before` gradient (see below). `bg-sand.jpg`
+  is unused and was removed from the repo and from `sw.js`'s cache list.
 - **`go(v)` does not toggle an `inner` class on `<body>`.** It only toggles
   `.on` on the view `<section>` elements. If you see that claim elsewhere,
   it doesn't match this file.

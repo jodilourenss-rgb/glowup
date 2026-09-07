@@ -1,6 +1,6 @@
 /* Caches the app so it opens with no connection.
    Bump CACHE when you change index.html, or the old copy keeps being served. */
-const CACHE = "glowup-v3";
+const CACHE = "glowup-v4";
 const ASSETS = [
   "./",
   "./index.html",
@@ -9,8 +9,7 @@ const ASSETS = [
   "./icon-192.png",
   "./icon-512.png",
   "./hero-today.jpg",
-  "./hero-beauty.jpg",
-  "./bg-sand.jpg"
+  "./hero-beauty.jpg"
 ];
 
 self.addEventListener("install", e => {

@@ -44,10 +44,6 @@ html,body{margin:0;padding:0;overflow-x:hidden}
 html{background:var(--cream)}
 body{color:var(--t1);font-family:var(--body);font-size:16px;line-height:1.55;
   -webkit-font-smoothing:antialiased}
-/* full-bleed backdrop. position:fixed rather than background-attachment,
-   which iOS Safari renders badly. Covers the whole viewport on every view. */
-body::before{content:"";position:fixed;inset:0;z-index:-1;
-  background:var(--cream) url(bg-sand.jpg) center/cover no-repeat}
 #app{max-width:520px;margin:0 auto;min-height:100vh}
 @supports (height:100dvh){#app{min-height:100dvh}}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
