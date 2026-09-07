@@ -25,12 +25,12 @@ GitHub Actions workflow). Push to the branch Pages is configured to serve
 
 ### Cache-busting after a deploy
 
-`sw.js` pre-caches the app shell under a named cache, currently `glowup-v3`.
+`sw.js` pre-caches the app shell under a named cache, currently `glowup-v5`.
 The cache name is versioned, and the comment at the top of `sw.js` is a
 reminder to bump it:
 
 ```js
-const CACHE = "glowup-v3";
+const CACHE = "glowup-v5";
 ```
 
 **Bump this string on every deploy that changes `index.html` or any cached
@@ -56,11 +56,11 @@ worker, not a bug.
 | `apple-touch-icon.png` | 11 KB | iOS home screen icon, referenced by `<link rel="apple-touch-icon">`. |
 | `hero-today.jpg` | 114 KB | Background image for the Today view hero, referenced in CSS (`.hero::before`). |
 | `hero-beauty.jpg` | 68 KB | Background image for the Beauty view banner, referenced in CSS (`.banner::before`). |
-| `bg-sand.jpg` | 56 KB | Full-page background, referenced by path in CSS (`body::before`). Previously embedded as a base64 blob; see Gotchas. |
+| `bg-sand.jpg` | 56 KB | Full-page background behind every view except Home, referenced by path in CSS (`body::before`). Home overrides it with its own gradient; see Gotchas. |
 
 Everything `index.html` references is present in the repo, and nothing is
-orphaned any more. `icon-alt-sage.png` and `icon-alt-umber.png` were removed
-(19 KB and 20 KB) — they were committed but referenced nowhere.
+orphaned. `icon-alt-sage.png` and `icon-alt-umber.png` were removed earlier
+after becoming unreferenced.
 
 ## Map of `index.html`
 
@@ -168,18 +168,18 @@ other day of the week ignores the letter entirely.
 
 ## Gotchas
 
-- **The background image used to be a base64 blob.** `body::before` in the
-  CSS previously embedded the page background as a ~76,000-character base64
-  JPEG data URI on a single line, because the image 404'd when referenced by
-  path at the time. It has since been switched to a normal path reference
-  (`url(bg-sand.jpg)`), matching how `hero-today.jpg` and `hero-beauty.jpg`
-  already worked. `index.html` is now 48 KB instead of 122 KB and safe to
-  open directly. **This was verified against a local server, not the live
-  GitHub Pages deployment** — the sandbox this change was made in couldn't
-  reach `jodilourenss-rgb.github.io`. Confirm the background still loads
-  after your next deploy; if it 404s again, that points to something about
-  the Pages build rather than the path syntax, since the two hero images use
-  the identical pattern.
+- **The page-wide background photo has no opaque backdrop under it.**
+  `body::before` renders `bg-sand.jpg` full-bleed behind every view except
+  Home (which overrides it with its own `#v-home::before` gradient). The top
+  bar title and `.lbl` section labels sit directly on that photo with nothing
+  behind them. This once made them nearly illegible wherever the photo was
+  light-toned — briefly "fixed" by removing the photo layer entirely, but the
+  photo was wanted back, so the actual fix is in the text colours instead:
+  `.lbl` uses `var(--t1)` (not the lighter `--t3`) and `.bar .h1` uses a
+  dedicated near-black `#3A3025`, both chosen to hold up against the photo's
+  range of tones. If new text is ever added directly onto this background,
+  check it against both the lightest and darkest patches of `bg-sand.jpg`,
+  not just a plain cream swatch.
 - **`go(v)` does not toggle an `inner` class on `<body>`.** It only toggles
   `.on` on the view `<section>` elements. If you see that claim elsewhere,
   it doesn't match this file.

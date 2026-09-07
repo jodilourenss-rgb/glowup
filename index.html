@@ -14,7 +14,7 @@
 <link rel="icon" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=DM+Sans:wght@400;500&family=Playfair+Display:wght@500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --cream:#E9E2D7;      /* page base        */
@@ -29,8 +29,13 @@
   --glass:rgba(255,255,255,.38);   /* frosted panels over the photo */
   --glass-on:rgba(255,255,255,.58);
   --glass-line:rgba(255,255,255,.55);
+  --umber-deep:#2B2015;  /* home screen: top of the gradient   */
+  --bronze:#8C6F4C;      /* home screen: gradient midpoint     */
+  --almond:#F1E8D8;      /* home screen: bottom of the gradient */
+  --offwhite:#F8F3E7;    /* home screen: headline on the dark end */
   --ui:"Inter",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif;
   --body:"DM Sans",-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,sans-serif;
+  --serif:"Playfair Display",Georgia,"Times New Roman",serif;
   --r:14px; --rs:10px;
   --pad:20px;
 }
@@ -53,14 +58,14 @@ svg{stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-l
 .h1{font-family:var(--ui);font-weight:500;font-size:28px;line-height:1.2;letter-spacing:-.02em;margin:0}
 .h2{font-family:var(--ui);font-weight:600;font-size:20px;line-height:1.3;letter-spacing:-.01em;margin:0}
 .h3{font-family:var(--ui);font-weight:600;font-size:16px;letter-spacing:-.005em;margin:0}
-.lbl{font-family:var(--ui);font-weight:500;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:0}
+.lbl{font-family:var(--ui);font-weight:500;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--t1);margin:0}
 .sm{font-size:13px;color:var(--t2);margin:0}
 .xs{font-size:12px;color:var(--t3);margin:0}
 
 /* ---------- chrome ---------- */
 .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:calc(14px + env(safe-area-inset-top)) var(--pad) 12px}
-.bar .h1{font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.bar .h1{font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#3A3025}
 .bar-side{width:24px;height:24px;color:var(--t2);flex:none}
 .wrap{padding:0 var(--pad) calc(38px + env(safe-area-inset-bottom))}
 .sec{margin-top:26px}
@@ -208,48 +213,42 @@ svg{stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-l
 .hr{height:1px;background:var(--line);border:0;margin:22px 0}
 
 /* ---------- home masthead ---------- */
-.masthead{position:fixed;left:0;right:0;top:0;z-index:3;max-width:520px;margin:0 auto;
-  padding:calc(16px + env(safe-area-inset-top)) var(--pad) 14px}
-.masthead::before{content:"";position:absolute;inset:0;z-index:-1;background:var(--glass);
-  backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--glass-line)}
-.masthead .mh-date{font-family:var(--ui);font-weight:500;font-size:11px;letter-spacing:.13em;
-  text-transform:uppercase;color:var(--t2);margin:0}
-.masthead .mh-focus{font-family:var(--ui);font-weight:500;font-size:17px;color:var(--t1);
-  margin:4px 0 0;letter-spacing:-.01em}
+#v-home::before{content:"";position:fixed;inset:0;z-index:0;
+  background:
+    radial-gradient(120% 60% at 75% 12%,rgba(255,244,225,.16),transparent 60%),
+    linear-gradient(180deg,var(--umber-deep) 0%,var(--bronze) 22%,var(--almond) 40%)}
+#v-home{position:relative}
+.home-top{position:relative;z-index:1;padding:calc(28px + env(safe-area-inset-top)) var(--pad) 6px}
+.hm-date{font-family:var(--ui);font-weight:400;font-size:12px;letter-spacing:.15em;
+  text-transform:uppercase;color:rgba(248,243,231,.78);margin:0}
+.hm-rule{display:block;width:40px;height:1px;background:rgba(248,243,231,.45);margin:14px 0 18px}
+.hm-headline{font-family:var(--serif);font-weight:600;font-size:34px;line-height:1.28;
+  color:var(--offwhite);margin:0;letter-spacing:-.005em}
+.hm-actions{position:relative;z-index:1;display:flex;align-items:center;gap:10px;
+  padding:26px var(--pad) 30px}
+.hm-today{flex:1;display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:15px 20px;border-radius:999px;background:var(--glass);backdrop-filter:blur(16px);
+  -webkit-backdrop-filter:blur(16px);border:1px solid var(--glass-line);
+  font-family:var(--ui);font-weight:500;font-size:12.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--t1)}
+.hm-today svg{width:16px;height:16px;flex:none;stroke:var(--t1)}
+.hm-ring{width:48px;height:48px;flex:none;border-radius:50%;border:1px solid rgba(248,243,231,.55);
+  display:grid;place-items:center}
+.hm-ring svg{width:20px;height:20px;stroke:var(--offwhite)}
 
 /* ---------- home arc ---------- */
-.arc{position:relative;height:100vh;overflow-y:auto;
-  scroll-snap-type:y mandatory;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;
-  scrollbar-width:none}
-@supports (height:100dvh){.arc{height:100dvh}}
-.arc::-webkit-scrollbar{display:none}
-.arc-curve{position:fixed;right:calc(50% - 260px - 46px);top:0;height:100vh;width:150px;
-  color:var(--line);pointer-events:none;z-index:0}
-@supports (height:100dvh){.arc-curve{height:100dvh}}
-@media (max-width:520px){.arc-curve{right:-46px}}
-.arc-dot{position:fixed;right:calc(50% - 260px + 16px);top:50%;transform:translateY(-50%);
-  width:38px;height:10px;border-radius:99px;background:var(--umber);opacity:.85;
-  pointer-events:none;z-index:2}
-@media (max-width:520px){.arc-dot{right:16px}}
-.arc-track{position:relative;z-index:1}
-.arc-item{display:flex;align-items:center;justify-content:flex-end;gap:16px;width:100%;height:98px;
-  scroll-snap-align:center;padding:0 76px 0 var(--pad);will-change:opacity}
-.arc-item .atx{display:flex;flex-direction:column;align-items:flex-end;gap:3px;text-align:right;
-  transform-origin:right center;will-change:transform}
-.arc-item .al{font-family:var(--ui);font-weight:500;font-size:19px;letter-spacing:-.01em;
-  color:var(--t2);white-space:nowrap;transition:color .18s,background .18s;
-  text-shadow:0 1px 5px rgba(255,255,255,.5)}
-.arc-item .as{font-family:var(--ui);font-size:11.5px;color:var(--t3);opacity:0;transition:opacity .18s;
-  text-shadow:0 1px 5px rgba(255,255,255,.5)}
-.arc-item .ai{display:grid;place-items:center;width:56px;height:56px;border-radius:18px;flex:0 0 56px;
-  background:var(--glass);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
-  border:1.5px solid var(--glass-line);transition:background .18s,border-color .18s}
-.arc-item .ai svg{width:24px;height:24px;stroke:var(--t2);transition:stroke .18s}
-.arc-item.on .al{color:var(--t1);padding:7px 15px;border:1px solid var(--glass-line);border-radius:99px;
-  background:var(--glass-on);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);text-shadow:none}
-.arc-item.on .as{opacity:1}
-.arc-item.on .ai{background:var(--glass-on);border-color:var(--ac)}
-.arc-item.on .ai svg{stroke:var(--ac)}
+.arc{position:relative;z-index:1}
+.arc-track{position:relative}
+.arc-item{display:flex;align-items:center;gap:14px;width:100%;height:88px;
+  padding:0 var(--pad);border-top:1px solid rgba(43,32,21,.14);text-align:left}
+.arc-item .arc-num{font-family:var(--ui);font-weight:500;font-size:12.5px;color:var(--t3);
+  flex:none;width:20px}
+.arc-item .arc-div{flex:none;width:1px;height:28px;background:var(--line)}
+.arc-item .atx{flex:1;min-width:0;display:flex;flex-direction:column;gap:3px}
+.arc-item .al{font-family:var(--ui);font-weight:500;font-size:15px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--t1)}
+.arc-item .as{font-family:var(--body);font-size:13px;color:var(--t2)}
+.arc-item .arc-arrow{flex:none;width:18px;height:18px;stroke:var(--t2)}
 
 /* ---------- back ---------- */
 .back{display:flex;align-items:center;gap:6px;padding:8px 14px 8px 10px;border-radius:99px;
@@ -276,15 +275,16 @@ svg{stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-l
   <div id="toast" class="toast">Saved</div>
 
   <section id="v-home" class="view on">
-    <div class="masthead" id="masthead">
-      <p class="mh-date" id="hm-date"></p>
-      <p class="mh-focus" id="hm-focus"></p>
+    <div class="home-top">
+      <p class="hm-date" id="hm-date"></p>
+      <span class="hm-rule"></span>
+      <h1 class="hm-headline" id="hm-headline"></h1>
+    </div>
+    <div class="hm-actions">
+      <button class="hm-today" id="hm-today-btn"></button>
+      <button class="hm-ring" id="hm-ring-btn" aria-label="Back to top"></button>
     </div>
     <div class="arc" id="arc">
-      <svg class="arc-curve" viewBox="0 0 150 700" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M150 0 C 34 176, 34 524, 150 700" fill="none" stroke="currentColor" stroke-width="1"/>
-      </svg>
-      <span class="arc-dot" aria-hidden="true"></span>
       <div class="arc-track" id="arc-track" role="list"></div>
     </div>
   </section>
@@ -370,6 +370,7 @@ svg{stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-l
 const P = {
   home:'<path d="M4 10.2 12 4l8 6.2V19a1.3 1.3 0 0 1-1.3 1.3h-3.5v-5.4H8.8v5.4H5.3A1.3 1.3 0 0 1 4 19Z"/>',
   back:'<path d="M14.6 5.4 8 12l6.6 6.6"/>',
+  arrow:'<path d="M9.4 5.4 16 12l-6.6 6.6"/>',
   calendar:'<rect x="3.6" y="5.2" width="16.8" height="15.2" rx="2.6"/><path d="M3.6 9.8h16.8M8.2 3.4v3.4M15.8 3.4v3.4"/>',
   chart:'<path d="M4 20h16"/><path d="M7 20v-6M12 20V7M17 20v-9"/>',
   droplet:'<path d="M12 3.6c3 3.5 5.2 6.3 5.2 9.2a5.2 5.2 0 0 1-10.4 0c0-2.9 2.2-5.7 5.2-9.2Z"/>',
@@ -837,8 +838,8 @@ const SECTIONS = [
   ["beauty","Beauty","droplet","var(--caramel)"],
   ["reset","Reset","refresh","var(--storm)"]
 ];
-const ARC_H = 98;
-let arcActive = 0, arcTick = false;
+const ARC_H = 88;
+let arcTick = false;
 
 function go(v){
   document.querySelectorAll(".view").forEach(x=>x.classList.remove("on"));
@@ -848,77 +849,59 @@ function go(v){
   if(v==="home"){ sizeArc(); arcUpdate(); }
 }
 
-function sectionHint(id){
-  const mi=monthOf(todayISO), d=parse(todayISO);
-  if(id==="today"){
-    const p=planFor(todayISO);
-    return S.sessions[todayISO]?"Session done":p.title+" \u00b7 "+p.when;
-  }
-  if(id==="month") return MONTHNAMES[d.getMonth()]+" "+d.getFullYear();
-  if(id==="track"){
-    if(mi<0) return "Outside the plan";
-    const c=countsFor(mi);
-    return c.gym+" of 12 gym \u00b7 "+c.run+" of 8 runs";
-  }
-  if(id==="beauty"){
-    const n=HABITS.filter(([k])=>(S.habits[todayISO]||{})[k]).length;
-    return n+" of "+HABITS.length+" done today";
-  }
-  return mi>=0?MONTHNAMES[d.getMonth()]+" reset":"Outside the plan";
-}
+const HOME_SUBTITLES = {
+  month: () => MONTHNAMES[today.getMonth()],
+  track: () => "Patterns & progress",
+  beauty: () => "Your rituals",
+  reset: () => "Slow down"
+};
 
+/* The index list below is a flat, always-fully-visible list now rather than a
+   centering carousel, so these three no longer have anything to compute —
+   kept as safe no-ops because go() still calls sizeArc()/arcUpdate() on every
+   return to Home, and centerItem() is kept for any other caller. */
 function sizeArc(){
-  const box=document.getElementById("arc"), track=document.getElementById("arc-track");
-  if(!box||!track) return;
-  const pad=Math.max(0,(box.clientHeight-ARC_H)/2);
-  track.style.paddingTop=pad+"px"; track.style.paddingBottom=pad+"px";
+  const track=document.getElementById("arc-track");
+  if(track){ track.style.paddingTop=""; track.style.paddingBottom=""; }
 }
 function centerItem(i){
   const box=document.getElementById("arc");
   if(box) box.scrollTo({top:i*ARC_H,behavior:"smooth"});
 }
 function arcUpdate(){
-  const box=document.getElementById("arc");
-  if(!box) return;
-  const mid=box.scrollTop+box.clientHeight/2, half=box.clientHeight/2||1;
-  const items=box.querySelectorAll(".arc-item");
-  let best=0, bd=Infinity;
-  items.forEach((it,i)=>{
-    const c=it.offsetTop+it.offsetHeight/2;
-    const n=Math.max(-1.8,Math.min(1.8,(c-mid)/half)), a=Math.min(1,Math.abs(n));
+  document.querySelectorAll("#arc .arc-item").forEach(it=>{
+    it.style.opacity="";
     const tx=it.querySelector(".atx");
-    if(tx) tx.style.transform="translateX("+(-(a*a)*78)+"px) rotate("+(n*13)+"deg)";
-    it.style.opacity=String(1-a*0.70);
-    it.classList.remove("on");
-    const dd=Math.abs(c-mid); if(dd<bd){bd=dd;best=i;}
+    if(tx) tx.style.transform="";
   });
-  arcActive=best;
-  if(items[best]) items[best].classList.add("on");
 }
 function renderMasthead(){
   const mi=monthOf(todayISO);
   document.getElementById("hm-date").textContent=DAYNAMES[dow(today)]+", "+today.getDate()+" "+MONTHNAMES[today.getMonth()];
-  document.getElementById("hm-focus").textContent=mi>=0?MONTHS[mi].focus:"Outside the plan window";
+  document.getElementById("hm-headline").textContent=mi>=0?MONTHS[mi].focus:"Outside the plan window, but the routine still stands.";
 }
 function renderHome(){
   renderMasthead();
-  const box=document.getElementById("arc"), track=document.getElementById("arc-track");
-  const keep=box.scrollTop;
+  const track=document.getElementById("arc-track");
   track.innerHTML="";
-  SECTIONS.forEach(([id,label,icon,color],i)=>{
+  SECTIONS.filter(([id])=>id!=="today").forEach(([id,label],i)=>{
     const b=el("button","arc-item");
     b.dataset.s=id;
     b.setAttribute("role","listitem");
-    b.innerHTML='<span class="atx"><span class="al">'+label+'</span>'+
-      '<span class="as">'+sectionHint(id)+'</span></span>'+
-      '<span class="ai" style="--ac:'+color+'">'+ic(icon)+'</span>';
-    b.onclick=()=>{ if(i===arcActive) go(id); else centerItem(i); };
+    b.innerHTML='<span class="arc-num">'+String(i+1).padStart(2,"0")+'</span>'+
+      '<span class="arc-div"></span>'+
+      '<span class="atx"><span class="al">'+label+'</span>'+
+      '<span class="as">'+HOME_SUBTITLES[id]()+'</span></span>'+
+      ic("arrow","arc-arrow");
+    b.onclick=()=>go(id);
     track.appendChild(b);
   });
-  sizeArc();
-  box.scrollTop=keep;
-  arcUpdate();
 }
+
+document.getElementById("hm-today-btn").innerHTML='<span>Today</span>'+ic("arrow");
+document.getElementById("hm-today-btn").onclick=()=>go("today");
+document.getElementById("hm-ring-btn").innerHTML=ic("home");
+document.getElementById("hm-ring-btn").onclick=()=>go("home");
 
 document.getElementById("arc").addEventListener("scroll",()=>{
   if(arcTick) return;

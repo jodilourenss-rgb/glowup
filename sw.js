@@ -1,6 +1,6 @@
 /* Caches the app so it opens with no connection.
    Bump CACHE when you change index.html, or the old copy keeps being served. */
-const CACHE = "glowup-v3";
+const CACHE = "glowup-v5";
 const ASSETS = [
   "./",
   "./index.html",
