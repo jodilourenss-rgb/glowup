@@ -25,12 +25,12 @@ GitHub Actions workflow). Push to the branch Pages is configured to serve
 
 ### Cache-busting after a deploy
 
-`sw.js` pre-caches the app shell under a named cache, currently `glowup-v3`.
+`sw.js` pre-caches the app shell under a named cache, currently `glowup-v5`.
 The cache name is versioned, and the comment at the top of `sw.js` is a
 reminder to bump it:
 
 ```js
-const CACHE = "glowup-v3";
+const CACHE = "glowup-v5";
 ```
 
 **Bump this string on every deploy that changes `index.html` or any cached
@@ -56,11 +56,11 @@ worker, not a bug.
 | `apple-touch-icon.png` | 11 KB | iOS home screen icon, referenced by `<link rel="apple-touch-icon">`. |
 | `hero-today.jpg` | 114 KB | Background image for the Today view hero, referenced in CSS (`.hero::before`). |
 | `hero-beauty.jpg` | 68 KB | Background image for the Beauty view banner, referenced in CSS (`.banner::before`). |
+| `bg-sand.jpg` | 56 KB | Full-page background behind every view except Home, referenced by path in CSS (`body::before`). Home overrides it with its own gradient; see Gotchas. |
 
 Everything `index.html` references is present in the repo, and nothing is
-orphaned any more. `icon-alt-sage.png`, `icon-alt-umber.png`, and
-`bg-sand.jpg` were removed after becoming unreferenced — see Gotchas for why
-`bg-sand.jpg` went away.
+orphaned. `icon-alt-sage.png` and `icon-alt-umber.png` were removed earlier
+after becoming unreferenced.
 
 ## Map of `index.html`
 
@@ -168,16 +168,18 @@ other day of the week ignores the letter entirely.
 
 ## Gotchas
 
-- **There is no global page background image any more.** An earlier version
-  of `index.html` embedded a page-wide background photo as a base64 blob on
-  `body::before` (later switched to a normal `bg-sand.jpg` path reference).
-  That layer was removed entirely: it rendered behind every view with no
-  opaque backdrop between it and the page chrome, so the top bar title and
-  `.lbl` section labels on Month/Track/Beauty/Reset sat directly on the photo
-  and were nearly illegible wherever the photo was light. The page background
-  is now just `html{background:var(--cream)}` everywhere except Home, which
-  has its own scoped `#v-home::before` gradient (see below). `bg-sand.jpg`
-  is unused and was removed from the repo and from `sw.js`'s cache list.
+- **The page-wide background photo has no opaque backdrop under it.**
+  `body::before` renders `bg-sand.jpg` full-bleed behind every view except
+  Home (which overrides it with its own `#v-home::before` gradient). The top
+  bar title and `.lbl` section labels sit directly on that photo with nothing
+  behind them. This once made them nearly illegible wherever the photo was
+  light-toned — briefly "fixed" by removing the photo layer entirely, but the
+  photo was wanted back, so the actual fix is in the text colours instead:
+  `.lbl` uses `var(--t1)` (not the lighter `--t3`) and `.bar .h1` uses a
+  dedicated near-black `#3A3025`, both chosen to hold up against the photo's
+  range of tones. If new text is ever added directly onto this background,
+  check it against both the lightest and darkest patches of `bg-sand.jpg`,
+  not just a plain cream swatch.
 - **`go(v)` does not toggle an `inner` class on `<body>`.** It only toggles
   `.on` on the view `<section>` elements. If you see that claim elsewhere,
   it doesn't match this file.

@@ -44,6 +44,10 @@ html,body{margin:0;padding:0;overflow-x:hidden}
 html{background:var(--cream)}
 body{color:var(--t1);font-family:var(--body);font-size:16px;line-height:1.55;
   -webkit-font-smoothing:antialiased}
+/* full-bleed backdrop. position:fixed rather than background-attachment,
+   which iOS Safari renders badly. Covers the whole viewport on every view. */
+body::before{content:"";position:fixed;inset:0;z-index:-1;
+  background:var(--cream) url(bg-sand.jpg) center/cover no-repeat}
 #app{max-width:520px;margin:0 auto;min-height:100vh}
 @supports (height:100dvh){#app{min-height:100dvh}}
 button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
@@ -54,14 +58,14 @@ svg{stroke:currentColor;fill:none;stroke-width:1.6;stroke-linecap:round;stroke-l
 .h1{font-family:var(--ui);font-weight:500;font-size:28px;line-height:1.2;letter-spacing:-.02em;margin:0}
 .h2{font-family:var(--ui);font-weight:600;font-size:20px;line-height:1.3;letter-spacing:-.01em;margin:0}
 .h3{font-family:var(--ui);font-weight:600;font-size:16px;letter-spacing:-.005em;margin:0}
-.lbl{font-family:var(--ui);font-weight:500;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--t3);margin:0}
+.lbl{font-family:var(--ui);font-weight:500;font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--t1);margin:0}
 .sm{font-size:13px;color:var(--t2);margin:0}
 .xs{font-size:12px;color:var(--t3);margin:0}
 
 /* ---------- chrome ---------- */
 .bar{display:flex;align-items:center;justify-content:space-between;gap:12px;
   padding:calc(14px + env(safe-area-inset-top)) var(--pad) 12px}
-.bar .h1{font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.bar .h1{font-size:15px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:#3A3025}
 .bar-side{width:24px;height:24px;color:var(--t2);flex:none}
 .wrap{padding:0 var(--pad) calc(38px + env(safe-area-inset-bottom))}
 .sec{margin-top:26px}
